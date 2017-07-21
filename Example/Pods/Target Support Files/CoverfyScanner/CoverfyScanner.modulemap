@@ -1,0 +1,6 @@
+framework module CoverfyScanner {
+  umbrella header "CoverfyScanner-umbrella.h"
+
+  export *
+  module * { export * }
+}

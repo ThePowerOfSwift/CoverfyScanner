@@ -1,0 +1,22 @@
+{
+  "name": "CoverfyScanner",
+  "version": "0.1.0",
+  "summary": "A short description of CoverfyScanner.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/josepbordesjove/CoverfyScanner",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "josepbordesjove": "josepbordesjove@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/josepbordesjove/CoverfyScanner.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "CoverfyScanner/Classes/**/*"
+}

@@ -1,0 +1,6 @@
+framework module Pods_CoverfyScanner_Tests {
+  umbrella header "Pods-CoverfyScanner_Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}

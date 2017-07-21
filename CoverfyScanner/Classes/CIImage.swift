@@ -1,0 +1,159 @@
+//
+//  CIImage.swift
+//  DocumentScanner
+//
+//  Created by Josep Bordes Jové on 18/7/17.
+//  Copyright © 2017 Josep Bordes Jové. All rights reserved.
+//
+
+import UIKit
+import CoreImage
+
+extension CIImage {
+    
+    func getImageOrientationForDevice() -> UIImageOrientation {
+        
+        switch UIDevice.current.orientation {
+        case .portrait:
+            return UIImageOrientation.right
+            
+        case .landscapeLeft:
+            return UIImageOrientation.up
+            
+        case .landscapeRight:
+            return UIImageOrientation.down
+            
+        case .portraitUpsideDown:
+            return UIImageOrientation.left
+            
+        default:
+            return UIImageOrientation.up
+        }
+    }
+    
+    func correctImageOrientation(forOrientation imageOrientation: CSImageOrientation) -> UIImage? {
+        let orientation = self.getImageOrientationForDevice()
+        
+        let height = self.extent.size.height
+        let width = self.extent.size.width
+        var size = CGSize(width: width, height: height)
+        var rect = CGRect(x: 0, y: 0, width: width, height: height)
+        
+        switch imageOrientation {
+        case .horizontal:
+            if height > width {
+                size = CGSize(width: height, height: width)
+                rect = CGRect(x: 0, y: 0, width: height, height: width)
+            }
+            
+        case .vertical:
+            if height < width {
+                size = CGSize(width: height, height: width)
+                rect = CGRect(x: 0, y: 0, width: height, height: width)
+            }
+            
+        }
+        
+        UIGraphicsBeginImageContext(size)
+        
+        var image: UIImage? = UIImage(ciImage: self, scale: 1, orientation: orientation)
+        image?.draw(in: rect)
+        image = UIGraphicsGetImageFromCurrentImageContext()
+        
+        UIGraphicsEndImageContext()
+        
+        return image
+    }
+    
+    func correctImageOrientation(fromOrientation inputOrientation: UIImageOrientation) -> UIImage? {
+        var orientation: UIImageOrientation? = nil
+        
+        switch inputOrientation {
+        case .down:
+            orientation = UIImageOrientation.left
+            
+        case .left:
+            orientation = UIImageOrientation.up
+            
+        case .up:
+            orientation = UIImageOrientation.right
+            
+        case .right:
+            orientation = UIImageOrientation.down
+            
+        default:
+            orientation = UIImageOrientation.up
+        }
+        
+        let height = self.extent.size.height
+        let width = self.extent.size.width
+        var size = CGSize(width: width, height: height)
+        var rect = CGRect(x: 0, y: 0, width: width, height: height)
+        
+        if height < width {
+            size = CGSize(width: height, height: width)
+            rect = CGRect(x: 0, y: 0, width: height, height: width)
+        }
+        
+        UIGraphicsBeginImageContext(size)
+        
+        var image: UIImage? = UIImage(ciImage: self, scale: 1, orientation: orientation!)
+        image?.draw(in: rect)
+        image = UIGraphicsGetImageFromCurrentImageContext()
+        
+        UIGraphicsEndImageContext()
+                
+        return image
+    }
+    
+    func filterImageUsingContrastFilter() -> CIImage? {
+        guard let imageFiltered: CIFilter = CIFilter(name: kCIColorControls, withInputParameters:
+            [
+                kCIInputImageKey: self,
+                kCIInputBrightnessKey: 0.0,
+                kCIInputContrastKey: 1.4,
+                kCIInputSaturationKey: 0.0
+            ]) else { return nil }
+        
+        return imageFiltered.outputImage
+    }
+    
+    func correctPerspective(withRectangle rectangle: CSRectangle) -> CIImage {
+        let rectangleCoordinates = [
+            kCIInputTopLeft: CIVector(cgPoint: rectangle.topLeft),
+            kCIInputTopRight: CIVector(cgPoint: rectangle.topRight),
+            kCIInputBottomLeft: CIVector(cgPoint: rectangle.bottomLeft),
+            kCIInputBottomRight: CIVector(cgPoint: rectangle.bottomRight)
+        ]
+        
+        return self.applyingFilter(kCIPerspectiveCorrection, withInputParameters: rectangleCoordinates)
+    }
+    
+    // MARK: - Crop Methods
+    
+    func cropBordersWith(margin: CGFloat) -> CIImage {
+        let original = self.extent
+        let rect = CGRect(
+            x: original.origin.x + margin,
+            y: original.origin.y + margin,
+            width: original.size.width-2*margin,
+            height: original.size.height-2*margin)
+        
+        return self.cropping(to: rect)
+    }
+    
+    func cropWithColorContrast(withRectangle rectangle: CSRectangle, preferredOrientation orientation: CSImageOrientation) -> UIImage? {
+        guard var image = self.filterImageUsingContrastFilter() else { return UIImage() }
+        image = image.cropBordersWith(margin: 1)
+        image = image.correctPerspective(withRectangle: rectangle)
+        
+        return image.correctImageOrientation(forOrientation: orientation)
+    }
+    
+    func crop(withRectangle rectangle: CSRectangle, preferredOrientation orientation: CSImageOrientation) -> UIImage? {
+        var image = self.correctPerspective(withRectangle: rectangle)
+        image = image.cropBordersWith(margin: 1)
+        
+        return image.correctImageOrientation(forOrientation: orientation)
+    }
+}

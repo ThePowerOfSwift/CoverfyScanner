@@ -1,0 +1,16 @@
+PODS:
+  - CoverfyScanner (0.1.0)
+
+DEPENDENCIES:
+  - CoverfyScanner (from `../`)
+
+EXTERNAL SOURCES:
+  CoverfyScanner:
+    :path: ../
+
+SPEC CHECKSUMS:
+  CoverfyScanner: f08bf5e458409b181d14c6cc7b0e399f937ab4b2
+
+PODFILE CHECKSUM: ff4a58eb9ae711a8054fa30ee1fb71335f098af8
+
+COCOAPODS: 1.2.1
