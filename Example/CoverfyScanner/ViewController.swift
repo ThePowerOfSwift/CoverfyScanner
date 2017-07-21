@@ -12,7 +12,7 @@ import CoverfyScanner
 class ViewController: UIViewController, UINavigationControllerDelegate {
     
     lazy var coverfyScanner: CoverfyScanner = {
-        let scanner = CoverfyScanner(superview: self.view, applyFilterCallback: nil, ratio: 1.5)
+        let scanner = CoverfyScanner(superview: self.view, videoFrameOption: .normal, applyFilterCallback: nil, ratio: 1.5)
         scanner.configure()
         
         return scanner

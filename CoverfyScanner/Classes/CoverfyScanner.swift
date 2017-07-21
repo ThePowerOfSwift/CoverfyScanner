@@ -60,8 +60,8 @@ public class CoverfyScanner: NSObject {
     
     public weak var delegate: CoverfyScannerDelegate?
     
-    public init(superview: UIView, applyFilterCallback: ((CIImage) -> CIImage?)?, ratio: Float) {
-        let cameraFrame = CGRect(x: -32, y: 68, width: superview.bounds.width + 64, height: superview.bounds.width + 64)
+    public init(superview: UIView, videoFrameOption: CSVideoFrame, applyFilterCallback: ((CIImage) -> CIImage?)?, ratio: Float) {
+        let cameraFrame = CoverfyScanner.calculateFrameForScreenOption(videoFrameOption, superview.frame)
         
         self.minRatio = ratio - 0.2
         self.maxRatio = ratio + 0.2
@@ -73,6 +73,29 @@ public class CoverfyScanner: NSObject {
         
         self.renderContext = CIContext(eaglContext: videoDisplayView.context)
 
+        self.videoDisplayViewBounds = CGRect(x: 0, y: 0, width: videoDisplayView.drawableWidth, height: videoDisplayView.drawableHeight)
+        
+        self.sessionQueue = DispatchQueue(label: "AVSessionQueue", attributes: [])
+        
+        self.currentImage = CIImage()
+        
+        superview.addSubview(videoDisplayView)
+        superview.sendSubview(toBack: videoDisplayView)
+    }
+    
+    public init(superview: UIView, applyFilterCallback: ((CIImage) -> CIImage?)?, ratio: Float) {
+        let cameraFrame = CoverfyScanner.calculateFrameForScreenOption(.normal, superview.frame)
+        
+        self.minRatio = ratio - 0.2
+        self.maxRatio = ratio + 0.2
+        self.applyFilter = applyFilterCallback
+        
+        self.videoDisplayView = GLKView(frame: cameraFrame, context: EAGLContext(api: .openGLES2))
+        self.videoDisplayView.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi/2))
+        self.videoDisplayView.bindDrawable()
+        
+        self.renderContext = CIContext(eaglContext: videoDisplayView.context)
+        
         self.videoDisplayViewBounds = CGRect(x: 0, y: 0, width: videoDisplayView.drawableWidth, height: videoDisplayView.drawableHeight)
         
         self.sessionQueue = DispatchQueue(label: "AVSessionQueue", attributes: [])
@@ -168,6 +191,35 @@ public class CoverfyScanner: NSObject {
         return session
     }
     
+    private static func calculateFrameForScreenOption(_ frameOption: CSVideoFrame, _ viewFrame: CGRect) -> CGRect {
+        
+        switch frameOption {
+        case .fullScreen:
+            let topMargin: CGFloat = 20
+            let bottomMargin: CGFloat = 0
+            
+            let width = viewFrame.width
+            let height = viewFrame.height - topMargin - bottomMargin
+            
+            let doubledDifference = height - width
+            let simpleDifference = doubledDifference / 2
+            
+            return CGRect(x: -simpleDifference, y: topMargin, width: width + doubledDifference, height: width + doubledDifference)
+        case .normal:
+            let topMargin: CGFloat = 70
+            let bottomMargin: CGFloat = 120
+            
+            let width = viewFrame.width
+            let height = viewFrame.height - topMargin - bottomMargin
+            
+            let doubledDifference = height - width
+            let simpleDifference = doubledDifference / 2
+            
+            return CGRect(x: -simpleDifference, y: topMargin, width: width + doubledDifference, height: width + doubledDifference)
+        }
+        
+    }
+    
     // MARK: - Detection Document Methods
     
     private func performRectangleDetection(image: CIImage) -> CIImage? {
@@ -237,12 +289,10 @@ public class CoverfyScanner: NSObject {
             do {
                 try device.lockForConfiguration()
                 
-                if (device.torchMode == AVCaptureTorchMode.on) {
-                    device.torchMode = AVCaptureTorchMode.off
+                if self.isFlashActive {
+                    try device.setTorchModeOnWithLevel(1.0)
                 } else {
-                    if self.isFlashActive {
-                        try device.setTorchModeOnWithLevel(1.0)
-                    }
+                    device.torchMode = AVCaptureTorchMode.off
                 }
                 
                 device.unlockForConfiguration()

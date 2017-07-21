@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'CoverfyScanner'
-  s.version          = '0.1.0'
+  s.version          = '0.1.2'
   s.summary          = 'This short description of CoverfyScanner.'
 
 # This description is used to generate tags and improve search results.

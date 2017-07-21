@@ -18,6 +18,11 @@ public enum CSImageOrientation {
     case horizontal
 }
 
+public enum CSVideoFrame {
+    case normal
+    case fullScreen
+}
+
 public enum CSErrors: String, Error {
     case noAvSessionAvailable = "The AVSession was not created properly"
     case cannotSetFocusMode = "The focus mode cannot be set"
