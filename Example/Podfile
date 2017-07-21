@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'CoverfyScanner_Example' do
+  pod 'CoverfyScanner', :path => '../'
+
+  target 'CoverfyScanner_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
