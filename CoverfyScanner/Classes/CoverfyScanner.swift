@@ -240,7 +240,9 @@ public class CoverfyScanner: NSObject {
                 if (device.torchMode == AVCaptureTorchMode.on) {
                     device.torchMode = AVCaptureTorchMode.off
                 } else {
-                    try device.setTorchModeOnWithLevel(1.0)
+                    if self.isFlashActive {
+                        try device.setTorchModeOnWithLevel(1.0)
+                    }
                 }
                 
                 device.unlockForConfiguration()
