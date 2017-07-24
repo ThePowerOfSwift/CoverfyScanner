@@ -1,9 +1,9 @@
 //
-//  CIImage.swift
-//  DocumentScanner
+//  CSPoint.swift
+//  Pods
 //
-//  Created by Josep Bordes Jové on 18/7/17.
-//  Copyright © 2017 Josep Bordes Jové. All rights reserved.
+//  Created by Josep Bordes Jové on 24/7/17.
+//
 //
 
 import UIKit
@@ -120,10 +120,10 @@ extension CIImage {
     
     func correctPerspective(withRectangle rectangle: CSRectangle) -> CIImage {
         let rectangleCoordinates = [
-            kCIInputTopLeft: CIVector(cgPoint: rectangle.topLeft),
-            kCIInputTopRight: CIVector(cgPoint: rectangle.topRight),
-            kCIInputBottomLeft: CIVector(cgPoint: rectangle.bottomLeft),
-            kCIInputBottomRight: CIVector(cgPoint: rectangle.bottomRight)
+            kCIInputTopLeft: CIVector(cgPoint: rectangle.topLeft.point),
+            kCIInputTopRight: CIVector(cgPoint: rectangle.topRight.point),
+            kCIInputBottomLeft: CIVector(cgPoint: rectangle.bottomLeft.point),
+            kCIInputBottomRight: CIVector(cgPoint: rectangle.bottomRight.point)
         ]
         
         return self.applyingFilter(kCIPerspectiveCorrection, withInputParameters: rectangleCoordinates)

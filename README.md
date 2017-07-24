@@ -22,7 +22,7 @@ pod "CoverfyScanner"
 
 ## Author
 
-josepbordesjove, josepbordesjove@gmail.com
+josepbordesjove, josep.bordes@coverfy.com
 
 ## License
 

@@ -1,9 +1,9 @@
 //
-//  CoreImageVideoFilter.swift
-//  DocumentScanner
+//  CSPoint.swift
+//  Pods
 //
-//  Created by Josep Bordes Jové on 18/7/17.
-//  Copyright © 2017 Josep Bordes Jové. All rights reserved.
+//  Created by Josep Bordes Jové on 24/7/17.
+//
 //
 
 import UIKit
@@ -35,11 +35,7 @@ public class CoverfyScanner: NSObject {
     
     public var isFlashActive = false {
         didSet {
-            do {
-                try toggleFlash()
-            } catch {
-                print(error)
-            }
+            toggleFlash()
         }
     }
     
@@ -49,8 +45,10 @@ public class CoverfyScanner: NSObject {
     
     private var detectedRectangle = CSRectangle()
     
+    private let ratio: Float
     private let minRatio: Float
     private let maxRatio: Float
+    private let superViewFrame: CGRect
     
     fileprivate var sessionQueue: DispatchQueue
     fileprivate var videoDisplayView: GLKView
@@ -63,6 +61,9 @@ public class CoverfyScanner: NSObject {
     public init(superview: UIView, videoFrameOption: CSVideoFrame, applyFilterCallback: ((CIImage) -> CIImage?)?, ratio: Float) {
         let cameraFrame = CoverfyScanner.calculateFrameForScreenOption(videoFrameOption, superview.frame)
         
+        self.superViewFrame = superview.frame
+        
+        self.ratio = ratio
         self.minRatio = ratio - 0.2
         self.maxRatio = ratio + 0.2
         self.applyFilter = applyFilterCallback
@@ -86,6 +87,9 @@ public class CoverfyScanner: NSObject {
     public init(superview: UIView, applyFilterCallback: ((CIImage) -> CIImage?)?, ratio: Float) {
         let cameraFrame = CoverfyScanner.calculateFrameForScreenOption(.normal, superview.frame)
         
+        self.superViewFrame = superview.frame
+        
+        self.ratio = ratio
         self.minRatio = ratio - 0.2
         self.maxRatio = ratio + 0.2
         self.applyFilter = applyFilterCallback
@@ -114,16 +118,11 @@ public class CoverfyScanner: NSObject {
     // MARK: - Scanner Control Methods
     
     public func start() throws {
-    
-        if avSession == nil {
-            do {
-                avSession = try createAVSession()
-            } catch {
-                throw CSErrors.noAvSessionAvailable
-            }
+        do {
+            try activateScannerDetection()
+        } catch {
+            throw error
         }
-        
-        avSession?.startRunning()
     }
     
     public func stop() {
@@ -163,6 +162,18 @@ public class CoverfyScanner: NSObject {
     }
     
     // MARK: - Scanner setup methods
+    
+    private func prepareAvSession() throws {
+        if avSession == nil {
+            do {
+                avSession = try createAVSession()
+            } catch {
+                throw CSErrors.noAvSessionAvailable
+            }
+        }
+        
+        avSession?.startRunning()
+    }
     
     private func createAVSession() throws -> AVCaptureSession {
         // Set the input media as Video Input from the device
@@ -205,6 +216,13 @@ public class CoverfyScanner: NSObject {
             let simpleDifference = doubledDifference / 2
             
             return CGRect(x: -simpleDifference, y: topMargin, width: width + doubledDifference, height: width + doubledDifference)
+        case .square:
+            let topMargin: CGFloat = 70
+            
+            let width = viewFrame.width
+            let heigh = viewFrame.width
+            
+            return CGRect(x: 0, y: topMargin, width: width, height: heigh)
         case .normal:
             let topMargin: CGFloat = 70
             let bottomMargin: CGFloat = 120
@@ -220,7 +238,14 @@ public class CoverfyScanner: NSObject {
         
     }
     
-    // MARK: - Detection Document Methods
+    // MARK: - Document Detection Setup
+    
+    private func prepareRectangleDetector() -> CIDetector? {
+        let options: [String: Any] = [CIDetectorAccuracy: CIDetectorAccuracyHigh, CIDetectorAspectRatio: 1.5]
+        return CIDetector(ofType: CIDetectorTypeRectangle, context: nil, options: options)
+    }
+    
+    // MARK: - Document Detection Methods
     
     private func performRectangleDetection(image: CIImage) -> CIImage? {
         var resultImage: CIImage?
@@ -237,11 +262,6 @@ public class CoverfyScanner: NSObject {
         return resultImage
     }
     
-    private func prepareRectangleDetector() -> CIDetector? {
-        let options: [String: Any] = [CIDetectorAccuracy: CIDetectorAccuracyHigh, CIDetectorAspectRatio: 1.5]
-        return CIDetector(ofType: CIDetectorTypeRectangle, context: nil, options: options)
-    }
-    
     private func drawHighlightOverlayForPoints(_ image: CIImage, _ rectangle: CSRectangle) -> CIImage {
         refreshDocumentAreaPoints(withRectangle: rectangle)
         
@@ -250,14 +270,16 @@ public class CoverfyScanner: NSObject {
         redSquareOverlay = redSquareOverlay.applyingFilter(kCIPerspectiveTransformWithExtent, withInputParameters:
             [
                 kCIInputExtent: CIVector(cgRect: image.extent),
-                kCIInputTopLeft: CIVector(cgPoint: detectedRectangle.topLeft),
-                kCIInputTopRight: CIVector(cgPoint: detectedRectangle.topRight),
-                kCIInputBottomLeft: CIVector(cgPoint: detectedRectangle.bottomLeft),
-                kCIInputBottomRight: CIVector(cgPoint: detectedRectangle.bottomRight)
+                kCIInputTopLeft: CIVector(cgPoint: detectedRectangle.topLeft.point),
+                kCIInputTopRight: CIVector(cgPoint: detectedRectangle.topRight.point),
+                kCIInputBottomLeft: CIVector(cgPoint: detectedRectangle.bottomLeft.point),
+                kCIInputBottomRight: CIVector(cgPoint: detectedRectangle.bottomRight.point)
             ])
         
         return redSquareOverlay.compositingOverImage(image)
     }
+    
+    // MARK: Document Detection Points Correction
     
     private func refreshDocumentAreaPoints(withRectangle rectangle: CSRectangle) {
         let ratio = rectangle.calculateRatio()
@@ -268,10 +290,123 @@ public class CoverfyScanner: NSObject {
             return
         }
         
-        detectedRectangle.topLeft = shouldRefreshPoint(previous: detectedRectangle.topLeft, actual: rectangle.topLeft)
-        detectedRectangle.topRight = shouldRefreshPoint(previous: detectedRectangle.topRight, actual: rectangle.topRight)
-        detectedRectangle.bottomLeft = shouldRefreshPoint(previous: detectedRectangle.bottomLeft, actual: rectangle.bottomLeft)
-        detectedRectangle.bottomRight = shouldRefreshPoint(previous: detectedRectangle.bottomRight, actual: rectangle.bottomRight)
+        detectedRectangle.topLeft.point = shouldRefreshPoint(previous: detectedRectangle.topLeft, actual: rectangle.topLeft)
+        detectedRectangle.topRight.point = shouldRefreshPoint(previous: detectedRectangle.topRight, actual: rectangle.topRight)
+        detectedRectangle.bottomLeft.point = shouldRefreshPoint(previous: detectedRectangle.bottomLeft, actual: rectangle.bottomLeft)
+        detectedRectangle.bottomRight.point = shouldRefreshPoint(previous: detectedRectangle.bottomRight, actual: rectangle.bottomRight)
+    }
+    
+    private func shouldRefreshPoint(previous: CSPoint, actual: CSPoint) -> CGPoint {
+        if !passPointsPosition(actual) {
+            return previous.point
+        }
+        
+        if !passRatio(previous, actual) {
+            return previous.point
+        }
+        
+        if !passAbsoluteMovement(previous, actual) {
+            if abs(previous.point.x - actual.point.x) > 17 { captureProgress = captureProgress > 0 ? captureProgress - 2 : captureProgress }
+            return previous.point
+        }
+        
+        if !passDocumentSize(actual) {
+            return previous.point
+        }
+        
+        if !passAnglesRules(actual) {
+            return previous.point
+        }
+        
+        return actual.point
+    }
+    
+    private func passPointsPosition(_ actual: CSPoint) -> Bool {
+        var frame: CGRect = CGRect()
+        
+        switch actual.type {
+        case .topLeft:
+            frame = superViewFrame.topLeftZone()
+        
+        case .topRight:
+            frame = superViewFrame.topRightZone()
+            
+        case .bottomLeft:
+            frame = superViewFrame.bottomLeftZone()
+            
+        case .bottomRight:
+            frame = superViewFrame.bottomRightZone()
+            
+        }
+        
+        return actual.point.isInside(frame)
+    }
+    
+    private func passRatio(_ previous: CSPoint, _ actual: CSPoint) -> Bool {
+        let actualRectangleRatio = CSRectangle(rectangle: self.detectedRectangle, newPoint: actual).calculateRatio()
+        
+        if actualRectangleRatio > self.minRatio && actualRectangleRatio < maxRatio {
+            return true
+        }
+        
+        return false
+    }
+    
+    private func passAbsoluteMovement(_ previous: CSPoint, _ actual: CSPoint) -> Bool {
+        let xMovement = abs(previous.point.x - actual.point.x)
+        let yMovement = abs(previous.point.y - actual.point.y)
+        
+        let movementError: CGFloat = 10
+        
+        let xMovementPercentage = xMovement / superViewFrame.width * 100
+        let yMovementPercentage = yMovement / superViewFrame.height * 100
+        
+        if  xMovementPercentage > movementError {
+            return false
+        }
+        
+        if  yMovementPercentage > movementError {
+            return false
+        }
+        
+        return true
+    }
+    
+    private func passDocumentSize( _ actual: CSPoint) -> Bool {
+        let rectangleWithNewPoint = CSRectangle(rectangle: self.detectedRectangle, newPoint: actual)
+        
+        let newRectangleSize = rectangleWithNewPoint.size()
+        let superviewSize = superViewFrame.size()
+        
+        let occupation = (newRectangleSize / superviewSize) * 100
+        
+        if occupation < 60 {
+            return false
+        }
+        
+        return true
+    }
+    
+    private func passAnglesRules(_ actual: CSPoint) -> Bool {
+        let newRectangle = CSRectangle(rectangle: self.detectedRectangle, newPoint: actual)
+        let angleError: Float = 10
+        
+        switch actual.type {
+        case .topLeft, .topRight:
+            let (alphaOne,alphaTwo) = newRectangle.calculateTopAngles()
+            
+            if alphaOne - alphaTwo > angleError {
+                return false
+            }
+        case .bottomLeft, .bottomRight:
+            let (alphaThree,alphaFour) = newRectangle.calculateBottomAngles()
+            
+            if alphaThree - alphaFour > angleError {
+                return false
+            }
+        }
+        
+        return true
     }
     
     // MARK: - ConfigurationMethods
@@ -282,7 +417,7 @@ public class CoverfyScanner: NSObject {
         }
     }
     
-    private func toggleFlash() throws {
+    private func toggleFlash() {
         guard let device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo) else { return }
         
         if device.hasTorch {
@@ -297,7 +432,7 @@ public class CoverfyScanner: NSObject {
                 
                 device.unlockForConfiguration()
             } catch {
-                throw error
+                print("Toggle Flas: \(error.localizedDescription)")
             }
         }
         
@@ -305,18 +440,13 @@ public class CoverfyScanner: NSObject {
     
     // MARK: - Helper Methods
     
-    private func shouldRefreshPoint(previous: CGPoint, actual: CGPoint) -> CGPoint {
-        if abs(previous.x - actual.x) > 20 {
-            if abs(previous.x - actual.x) > 17 { captureProgress = captureProgress > 0 ? captureProgress - 2 : captureProgress }
-            return actual
+    private func activateScannerDetection() throws {
+        // TODO: - Implement a timer that activates the detection
+        do {
+            try prepareAvSession()
+        } catch {
+            throw error
         }
-        
-        if abs(previous.y - actual.y) > 20 {
-            if abs(previous.y - actual.y) > 17 { captureProgress = captureProgress > 0 ? captureProgress - 2 : captureProgress }
-            return actual
-        }
-        
-        return previous
     }
 
 }

@@ -1,9 +1,9 @@
 //
-//  Constants.swift
-//  DocumentScanner
+//  CSPoint.swift
+//  Pods
 //
-//  Created by Josep Bordes Jové on 20/7/17.
-//  Copyright © 2017 Josep Bordes Jové. All rights reserved.
+//  Created by Josep Bordes Jové on 24/7/17.
+//
 //
 
 import Foundation

@@ -21,6 +21,9 @@
 		C97103C278C2DEB96A5DF5C7D225C64F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
 		CA54D05E75512894BFBC165FA63BA8F8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
 		CD73CC00CD91A83283B8B2B29DCEA5D8 /* Pods-CoverfyScanner_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = C8627006B889D6EFBB0A59894BD239AA /* Pods-CoverfyScanner_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FF41540C1F25F23800615C9D /* CSPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF41540B1F25F23800615C9D /* CSPoint.swift */; };
+		FF4154111F25FCA200615C9D /* CGRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4154101F25FCA200615C9D /* CGRect.swift */; };
+		FF4154131F25FCAF00615C9D /* CGPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF4154121F25FCAF00615C9D /* CGPoint.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,22 +48,22 @@
 		39D1F26C47CB299F603557412F277840 /* Pods-CoverfyScanner_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-CoverfyScanner_Example-umbrella.h"; sourceTree = "<group>"; };
 		3ADC7E3D8C117A3DF32C4BAB3F8F1BCF /* Pods-CoverfyScanner_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CoverfyScanner_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		43C03E4D8698038FFEF5DDD330DF2B3E /* CSEnums.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CSEnums.swift; sourceTree = "<group>"; };
-		467E70CB04C996A89E2824D7A47E5B19 /* Pods_CoverfyScanner_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_CoverfyScanner_Example.framework; path = "Pods-CoverfyScanner_Example.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		467E70CB04C996A89E2824D7A47E5B19 /* Pods_CoverfyScanner_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CoverfyScanner_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		533B5BFD87E16A1207F4A32358B70ADD /* CSConstants.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CSConstants.swift; sourceTree = "<group>"; };
 		5CC3741320D85BC16DAF0723828041CF /* Pods-CoverfyScanner_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CoverfyScanner_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		63C9BAE79CF306B9446E11AF95C498B0 /* Pods-CoverfyScanner_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-CoverfyScanner_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
 		6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		83FB12763D0C838E13CEEDBA807679A4 /* Pods-CoverfyScanner_Example-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CoverfyScanner_Example-resources.sh"; sourceTree = "<group>"; };
-		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9B13FF2867E7CCFAA6B2981019DCC275 /* Pods-CoverfyScanner_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-CoverfyScanner_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
 		AF884D9F29ABE8C25D58AA7FC202B7E6 /* CoverfyScanner.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CoverfyScanner.swift; sourceTree = "<group>"; };
-		BC8B5AE4B61F5157ACC0E78EE8EEFC2B /* Pods-CoverfyScanner_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-CoverfyScanner_Example.modulemap"; sourceTree = "<group>"; };
+		BC8B5AE4B61F5157ACC0E78EE8EEFC2B /* Pods-CoverfyScanner_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-CoverfyScanner_Example.modulemap"; sourceTree = "<group>"; };
 		BDAF3B063EA6BEA803E85B6422AD92AE /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BEF93338C9FE8061EC668D21A4A8099A /* CSRectangle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CSRectangle.swift; sourceTree = "<group>"; };
 		C7E42EE9E00D462B68CBA933F7BFCB23 /* CIImage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CIImage.swift; sourceTree = "<group>"; };
 		C8627006B889D6EFBB0A59894BD239AA /* Pods-CoverfyScanner_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-CoverfyScanner_Tests-umbrella.h"; sourceTree = "<group>"; };
-		CE0620A444860618BCFE5B433E104EA1 /* CoverfyScanner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = CoverfyScanner.framework; path = CoverfyScanner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		CF74F43C086A867E68CB2DB0E4065F7A /* Pods_CoverfyScanner_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_CoverfyScanner_Tests.framework; path = "Pods-CoverfyScanner_Tests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE0620A444860618BCFE5B433E104EA1 /* CoverfyScanner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoverfyScanner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF74F43C086A867E68CB2DB0E4065F7A /* Pods_CoverfyScanner_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CoverfyScanner_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D20C5930F7C963A2DB5FE5A26B3675CD /* Pods-CoverfyScanner_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-CoverfyScanner_Example-dummy.m"; sourceTree = "<group>"; };
 		DBCD5D5C1AE05496457D0C516203835A /* Pods-CoverfyScanner_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CoverfyScanner_Example.release.xcconfig"; sourceTree = "<group>"; };
 		DD20B23B38ED6B6F3DE373EA730ABE09 /* Pods-CoverfyScanner_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CoverfyScanner_Tests-frameworks.sh"; sourceTree = "<group>"; };
@@ -68,8 +71,11 @@
 		E0BD19EEED200A171D47DB214EB4F6DA /* CoverfyScanner-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "CoverfyScanner-dummy.m"; sourceTree = "<group>"; };
 		F037AD9CA73E1E82F667328EC3D68A55 /* CoverfyScanner.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = CoverfyScanner.xcconfig; sourceTree = "<group>"; };
 		F4AA90072BBB8E71DBBDF66144866DED /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F95E8A57D9CC13896EE1549EFB9D3FE4 /* Pods-CoverfyScanner_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-CoverfyScanner_Tests.modulemap"; sourceTree = "<group>"; };
-		FAECE9E7641CABB1348A7029E62A5210 /* CoverfyScanner.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = CoverfyScanner.modulemap; sourceTree = "<group>"; };
+		F95E8A57D9CC13896EE1549EFB9D3FE4 /* Pods-CoverfyScanner_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-CoverfyScanner_Tests.modulemap"; sourceTree = "<group>"; };
+		FAECE9E7641CABB1348A7029E62A5210 /* CoverfyScanner.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = CoverfyScanner.modulemap; sourceTree = "<group>"; };
+		FF41540B1F25F23800615C9D /* CSPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSPoint.swift; sourceTree = "<group>"; };
+		FF4154101F25FCA200615C9D /* CGRect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGRect.swift; sourceTree = "<group>"; };
+		FF4154121F25FCAF00615C9D /* CGPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGPoint.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,7 +129,6 @@
 			children = (
 				C4F458D26A538D12DC8D18C501E3583F /* Classes */,
 			);
-			name = CoverfyScanner;
 			path = CoverfyScanner;
 			sourceTree = "<group>";
 		};
@@ -218,13 +223,11 @@
 		C4F458D26A538D12DC8D18C501E3583F /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				C7E42EE9E00D462B68CBA933F7BFCB23 /* CIImage.swift */,
 				AF884D9F29ABE8C25D58AA7FC202B7E6 /* CoverfyScanner.swift */,
-				533B5BFD87E16A1207F4A32358B70ADD /* CSConstants.swift */,
-				43C03E4D8698038FFEF5DDD330DF2B3E /* CSEnums.swift */,
-				BEF93338C9FE8061EC668D21A4A8099A /* CSRectangle.swift */,
+				FF41540D1F25F26B00615C9D /* Model */,
+				FF41540E1F25F27400615C9D /* Other */,
+				FF41540F1F25F27C00615C9D /* Library */,
 			);
-			name = Classes;
 			path = Classes;
 			sourceTree = "<group>";
 		};
@@ -234,6 +237,34 @@
 				6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */,
 			);
 			name = iOS;
+			sourceTree = "<group>";
+		};
+		FF41540D1F25F26B00615C9D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				BEF93338C9FE8061EC668D21A4A8099A /* CSRectangle.swift */,
+				FF41540B1F25F23800615C9D /* CSPoint.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		FF41540E1F25F27400615C9D /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				533B5BFD87E16A1207F4A32358B70ADD /* CSConstants.swift */,
+				43C03E4D8698038FFEF5DDD330DF2B3E /* CSEnums.swift */,
+			);
+			name = Other;
+			sourceTree = "<group>";
+		};
+		FF41540F1F25F27C00615C9D /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				C7E42EE9E00D462B68CBA933F7BFCB23 /* CIImage.swift */,
+				FF4154101F25FCA200615C9D /* CGRect.swift */,
+				FF4154121F25FCAF00615C9D /* CGPoint.swift */,
+			);
+			name = Library;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -368,11 +399,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				5896FCCCB248FADB00ECAADFAE0E6749 /* CIImage.swift in Sources */,
+				FF41540C1F25F23800615C9D /* CSPoint.swift in Sources */,
 				8EDF8DE73A19C9D1FDCE7353E1E124A5 /* CoverfyScanner-dummy.m in Sources */,
 				B2B721ED6145245C78042E4B2F860970 /* CoverfyScanner.swift in Sources */,
+				FF4154131F25FCAF00615C9D /* CGPoint.swift in Sources */,
 				8D5A9E3044C1F7EC3F4B697D9A3A6F44 /* CSConstants.swift in Sources */,
 				B529571B428D073FE1DCB2A291B04D18 /* CSEnums.swift in Sources */,
 				C061C5AEF94CB0E9C287DF5276196748 /* CSRectangle.swift in Sources */,
+				FF4154111F25FCA200615C9D /* CGRect.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
