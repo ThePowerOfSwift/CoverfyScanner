@@ -22,6 +22,7 @@ public enum CSVideoFrame {
     case normal
     case square
     case fullScreen
+    case withBottomMargin
 }
 
 public enum CSErrors: String, Error {

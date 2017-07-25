@@ -246,6 +246,18 @@ public class CoverfyScanner: NSObject {
             let simpleDifference = doubledDifference / 2
             
             return CGRect(x: -simpleDifference, y: topMargin, width: width + doubledDifference, height: width + doubledDifference)
+            
+        case .withBottomMargin:
+            let topMargin: CGFloat = 20
+            let bottomMargin: CGFloat = 120
+            
+            let width = viewFrame.width
+            let height = viewFrame.height - topMargin - bottomMargin
+            
+            let doubledDifference = height - width
+            let simpleDifference = doubledDifference / 2
+            
+            return CGRect(x: -simpleDifference, y: topMargin, width: width + doubledDifference, height: width + doubledDifference)
         }
         
     }
@@ -335,10 +347,12 @@ public class CoverfyScanner: NSObject {
     
     // MARK: - ConfigurationMethods
     
-    public func changeVideoDisplayFrame(_ frame: CGRect) {
+    public func changeVideoDisplayFrame(_ frameOption: CSVideoFrame) {
+        
         UIView.animate(withDuration: 0.7) {
-            self.videoDisplayView.frame = frame
+            self.videoDisplayView.frame = CoverfyScanner.calculateFrameForScreenOption(frameOption, self.superViewFrame)
         }
+        
     }
     
     private func toggleFlash() {
