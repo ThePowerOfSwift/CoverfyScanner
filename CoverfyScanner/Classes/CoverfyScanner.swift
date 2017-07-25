@@ -350,6 +350,7 @@ public class CoverfyScanner: NSObject {
     public func changeVideoDisplayFrame(_ frameOption: CSVideoFrame) {
         
         UIView.animate(withDuration: 0.7) {
+            self.captureProgress = 0
             self.videoDisplayView.frame = CoverfyScanner.calculateFrameForScreenOption(frameOption, self.superViewFrame)
         }
         
