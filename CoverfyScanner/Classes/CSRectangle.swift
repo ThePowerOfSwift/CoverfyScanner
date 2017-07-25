@@ -8,7 +8,8 @@
 
 import UIKit
 
-public struct CSRectangle {
+public struct CSRectangle: Equatable {
+    
     var topLeft: CSPoint
     var topRight: CSPoint
     var bottomLeft: CSPoint
@@ -66,6 +67,29 @@ public struct CSRectangle {
         }
     }
     
+    // MARK: - Equatable protocol
+    
+    /// Returns a Boolean value indicating whether two values are equal.
+    ///
+    /// Equality is the inverse of inequality. For any values `a` and `b`,
+    /// `a == b` implies that `a != b` is `false`.
+    ///
+    /// - Parameters:
+    ///   - lhs: A value to compare.
+    ///   - rhs: Another value to compare.
+    public static func ==(lhs: CSRectangle, rhs: CSRectangle) -> Bool {
+        if  lhs.topLeft == rhs.topLeft &&
+            lhs.topRight == rhs.topRight &&
+            lhs.bottomLeft == rhs.bottomLeft &&
+            lhs.bottomRight == rhs.bottomRight {
+            return true
+        }
+        
+        return false
+    }
+    
+    // MARK: - Helper Methods
+    
     func calculateRatio() -> Float {
         let heightOne: Float = Float(self.bottomRight.point.x - self.bottomLeft.point.x)
         let widthOne: Float = Float(self.topRight.point.y - self.bottomRight.point.y)
@@ -90,6 +114,13 @@ public struct CSRectangle {
     
     func calculateBottomAngles() -> (Float, Float) {
         return (90, 90)
+    }
+    
+    func printString() {
+        print("topL: \(self.topLeft.point)")
+        print("topR: \(self.topRight.point)")
+        print("bottomL: \(self.bottomLeft.point)")
+        print("bottomR: \(self.bottomRight.point)")
     }
     
 }

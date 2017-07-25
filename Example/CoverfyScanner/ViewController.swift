@@ -170,7 +170,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     func captureImage() {
-        coverfyScanner.captureImage(withFilter: .none, andOrientation: .vertical)
+        coverfyScanner.captureImage(withFilter: .contrast, andOrientation: .vertical)
     }
     
     func showinfoLabel() {
