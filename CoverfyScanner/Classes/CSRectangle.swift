@@ -15,12 +15,20 @@ public struct CSRectangle: Equatable {
     var bottomLeft: CSPoint
     var bottomRight: CSPoint
     
-    init() {
-        self.topLeft = CSPoint(point: CGPoint(x: 0, y: 0), type: .topLeft)
-        self.topRight = CSPoint(point: CGPoint(x: 0, y: 0), type: .topRight)
-        self.bottomLeft = CSPoint(point: CGPoint(x: 0, y: 0), type: .bottomLeft)
-        self.bottomRight = CSPoint(point: CGPoint(x: 0, y: 0), type: .bottomRight)
-        
+    init(rectangleType: CSRectangleSize) {
+        switch rectangleType {
+        case .fullFrame:
+            self.topLeft = CSPoint(point: CGPoint(x: 0, y: 0), type: .topLeft)
+            self.topRight = CSPoint(point: CGPoint(x: 1920, y: 0), type: .topRight)
+            self.bottomLeft = CSPoint(point: CGPoint(x: 0, y: 1080), type: .bottomLeft)
+            self.bottomRight = CSPoint(point: CGPoint(x: 1920, y: 1080), type: .bottomRight)
+            
+        case .empty:
+            self.topLeft = CSPoint(point: CGPoint(x: 0, y: 0), type: .topLeft)
+            self.topRight = CSPoint(point: CGPoint(x: 0, y: 0), type: .topRight)
+            self.bottomLeft = CSPoint(point: CGPoint(x: 0, y: 0), type: .bottomLeft)
+            self.bottomRight = CSPoint(point: CGPoint(x: 0, y: 0), type: .bottomRight)
+        }
     }
     
     init(topLeft: CGPoint, topRight: CGPoint, bottomLeft: CGPoint, bottomRight: CGPoint) {

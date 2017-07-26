@@ -42,7 +42,7 @@ public class CoverfyScanner: NSObject {
     private var squareDetectionCounter = 0 {
         didSet {
             if squareDetectionCounter >= 4 {
-                detectedRectangle = CSRectangle()
+                detectedRectangle = CSRectangle(rectangleType: .empty)
             }
         }
     }
@@ -51,7 +51,7 @@ public class CoverfyScanner: NSObject {
     private var avSession: AVCaptureSession?
     fileprivate var applyFilter: ((CIImage) -> CIImage?)?
     
-    private var detectedRectangle = CSRectangle()
+    private var detectedRectangle = CSRectangle(rectangleType: .empty)
     
     private let ratio: Float
     private let minRatio: Float
@@ -159,13 +159,27 @@ public class CoverfyScanner: NSObject {
             image = self.currentImage.crop(withRectangle: self.detectedRectangle, preferredOrientation: orientation)
         }
         
+        if image == nil {
+            image = self.currentImage.noCropWithColorContrast(preferredOrientation: orientation)
+        }
+                
         self.captureProgress = 0
         delegate?.getCapturedImageFiltered(image)
     }
     
     public func captureImage(withOrientation orientation: CSImageOrientation) {
         var image: UIImage? = UIImage()
+        
         image = self.currentImage.crop(withRectangle: self.detectedRectangle, preferredOrientation: orientation)
+        
+        self.captureProgress = 0
+        delegate?.getCapturedImageFiltered(image)
+    }
+    
+    public func captureImageWithNoCrop(withOrientation orientation: CSImageOrientation) {
+        var image: UIImage? = UIImage()
+        
+        image = self.currentImage.noCropWithColorContrast(preferredOrientation: orientation)
         
         self.captureProgress = 0
         delegate?.getCapturedImageFiltered(image)
@@ -318,13 +332,19 @@ public class CoverfyScanner: NSObject {
         let newRectangle = CSRectangle(rectangle: rectangle, newPoint: actual)
         
         // Check the point movement compared to the previous position
-        if previous.absoluteMovementFrom(point: actual) <= 10 {
+        if previous.absoluteMovementFrom(point: actual) <= 5 {
+            self.captureProgress += 5
+            
+        } else if previous.absoluteMovementFrom(point: actual) <= 10 {
             self.captureProgress += 1
+            
         } else if previous.absoluteMovementFrom(point: actual) <= 20 {
-            self.captureProgress -= 1
-        } else if previous.absoluteMovementFrom(point: actual) < 50 {
+            self.captureProgress -= 2
+            
+        } else if previous.absoluteMovementFrom(point: actual) < 50 &&  previous.absoluteMovementFrom(point: actual) >= 30 {
             self.captureProgress = 0
-        } else if previous.absoluteMovementFrom(point: actual) >= 50 {
+            
+        } else {
             
             if newRectangle.calculateRatio() < minRatio || newRectangle.calculateRatio() > maxRatio {
                 return previous.point

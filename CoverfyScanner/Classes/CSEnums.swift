@@ -37,3 +37,8 @@ public enum CSPointType {
     case bottomRight
     case bottomLeft
 }
+
+public enum CSRectangleSize {
+    case fullFrame
+    case empty
+}

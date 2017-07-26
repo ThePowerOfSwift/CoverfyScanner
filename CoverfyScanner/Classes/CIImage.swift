@@ -31,9 +31,7 @@ extension CIImage {
         }
     }
     
-    func correctImageOrientation(forOrientation imageOrientation: CSImageOrientation) -> UIImage? {
-        let orientation = self.getImageOrientationForDevice()
-        
+    func correctImageOrientation(forOrientation imageOrientation: CSImageOrientation) -> UIImage? {        
         let height = self.extent.size.height
         let width = self.extent.size.width
         var size = CGSize(width: width, height: height)
@@ -56,7 +54,7 @@ extension CIImage {
         
         UIGraphicsBeginImageContext(size)
         
-        var image: UIImage? = UIImage(ciImage: self, scale: 1, orientation: orientation)
+        var image: UIImage? = UIImage(ciImage: self, scale: 1, orientation: .right)
         image?.draw(in: rect)
         image = UIGraphicsGetImageFromCurrentImageContext()
         
@@ -153,6 +151,13 @@ extension CIImage {
     func crop(withRectangle rectangle: CSRectangle, preferredOrientation orientation: CSImageOrientation) -> UIImage? {
         var image = self.correctPerspective(withRectangle: rectangle)
         image = image.cropBordersWith(margin: 1)
+        
+        return image.correctImageOrientation(forOrientation: orientation)
+    }
+    
+    func noCropWithColorContrast(preferredOrientation orientation: CSImageOrientation) -> UIImage? {
+        guard var image = self.filterImageUsingContrastFilter() else { return UIImage() }
+        image = image.cropBordersWith(margin: 15)
         
         return image.correctImageOrientation(forOrientation: orientation)
     }
