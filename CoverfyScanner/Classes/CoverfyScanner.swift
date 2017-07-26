@@ -317,6 +317,22 @@ public class CoverfyScanner: NSObject {
     private func shouldRefreshPoint(_ image: CIImage, _ rectangle: CSRectangle, _ previous: CSPoint, _ actual: CSPoint) -> CGPoint {
         let newRectangle = CSRectangle(rectangle: rectangle, newPoint: actual)
         
+        // Check the point movement compared to the previous position
+        if previous.absoluteMovementFrom(point: actual) <= 10 {
+            self.captureProgress += 1
+        } else if previous.absoluteMovementFrom(point: actual) <= 20 {
+            self.captureProgress -= 1
+        } else if previous.absoluteMovementFrom(point: actual) < 50 {
+            self.captureProgress = 0
+        } else if previous.absoluteMovementFrom(point: actual) >= 50 {
+            
+            if newRectangle.calculateRatio() < minRatio || newRectangle.calculateRatio() > maxRatio {
+                return previous.point
+            } else {
+                return actual.point
+            }
+        }
+        
         // If the point is null, at least return the detected point
         if previous.point == CGPoint(x: 0, y: 0) {
             return actual.point
@@ -331,16 +347,6 @@ public class CoverfyScanner: NSObject {
         if newRectangle.calculateRatio() < minRatio || newRectangle.calculateRatio() > maxRatio {
             return previous.point
         }
-        
-        // Check the point movement compared to the previous position
-        if previous.absoluteMovementFrom(point: actual) <= 10 {
-            self.captureProgress += 1
-        } else if previous.absoluteMovementFrom(point: actual) <= 20 {
-            self.captureProgress -= 1
-        } else if previous.absoluteMovementFrom(point: actual) < 50 {
-            self.captureProgress = 0
-        }
-        
         
         return actual.point
     }
