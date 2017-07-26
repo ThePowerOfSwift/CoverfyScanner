@@ -21,7 +21,7 @@ public protocol CoverfyScannerDelegate: class {
 
 public class CoverfyScanner: NSObject {
     
-    private var captureProgress: Float = 0 {
+    private var captureProgress: Float = -50 {
         didSet {
             delegate?.getCapturingProgress(self.captureProgress * 2 / 100)
         }
@@ -29,7 +29,7 @@ public class CoverfyScanner: NSObject {
     
     public var isBlackFilterActivated = false {
         didSet {
-            self.captureProgress = 0
+            self.captureProgress = -50
         }
     }
     
@@ -163,7 +163,7 @@ public class CoverfyScanner: NSObject {
             image = self.currentImage.noCropWithColorContrast(preferredOrientation: orientation)
         }
                 
-        self.captureProgress = 0
+        self.captureProgress = -50
         delegate?.getCapturedImageFiltered(image)
     }
     
@@ -172,7 +172,7 @@ public class CoverfyScanner: NSObject {
         
         image = self.currentImage.crop(withRectangle: self.detectedRectangle, preferredOrientation: orientation)
         
-        self.captureProgress = 0
+        self.captureProgress = -50
         delegate?.getCapturedImageFiltered(image)
     }
     
@@ -181,7 +181,7 @@ public class CoverfyScanner: NSObject {
         
         image = self.currentImage.noCropWithColorContrast(preferredOrientation: orientation)
         
-        self.captureProgress = 0
+        self.captureProgress = -50
         delegate?.getCapturedImageFiltered(image)
     }
     
@@ -312,6 +312,10 @@ public class CoverfyScanner: NSObject {
     
     private func renderRed(_ rectangle: CSRectangle, inImage image: CIImage) -> CIImage {
         
+        if captureProgress < 0 {
+            return image
+        }
+        
         var redSquareOverlay = CIImage(color: CIColor(red: 1.0, green: 0, blue: 0, alpha: 0.5))
         redSquareOverlay = redSquareOverlay.cropping(to: image.extent)
         redSquareOverlay = redSquareOverlay.applyingFilter(kCIPerspectiveTransformWithExtent, withInputParameters:
@@ -344,7 +348,7 @@ public class CoverfyScanner: NSObject {
             
         } else if previous.absoluteMovementFrom(point: actual) < 50 &&  previous.absoluteMovementFrom(point: actual) >= 30 {
              squareDetectionCounter += 1
-            self.captureProgress = 0
+            self.captureProgress = -50
             
         } else {
             
@@ -378,7 +382,7 @@ public class CoverfyScanner: NSObject {
     public func changeVideoDisplayFrame(_ frameOption: CSVideoFrame) {
         
         UIView.animate(withDuration: 0.7) {
-            self.captureProgress = 0
+            self.captureProgress = -50
             self.videoDisplayView.frame = CoverfyScanner.calculateFrameForScreenOption(frameOption, self.superViewFrame)
         }
         
