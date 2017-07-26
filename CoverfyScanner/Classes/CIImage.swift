@@ -143,14 +143,20 @@ extension CIImage {
     func cropWithColorContrast(withRectangle rectangle: CSRectangle, preferredOrientation orientation: CSImageOrientation) -> UIImage? {
         guard var image = self.filterImageUsingContrastFilter() else { return UIImage() }
         image = image.cropBordersWith(margin: 1)
-        image = image.correctPerspective(withRectangle: rectangle)
+        
+        if !rectangle.isEmpty() {
+            image = image.correctPerspective(withRectangle: rectangle)
+        }
         
         return image.correctImageOrientation(forOrientation: orientation)
     }
     
     func crop(withRectangle rectangle: CSRectangle, preferredOrientation orientation: CSImageOrientation) -> UIImage? {
-        var image = self.correctPerspective(withRectangle: rectangle)
-        image = image.cropBordersWith(margin: 1)
+        var image = self.cropBordersWith(margin: 1)
+        
+        if !rectangle.isEmpty() {
+            image = image.correctPerspective(withRectangle: rectangle)
+        }
         
         return image.correctImageOrientation(forOrientation: orientation)
     }

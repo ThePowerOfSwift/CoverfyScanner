@@ -131,4 +131,8 @@ public struct CSRectangle: Equatable {
         print("bottomR: \(self.bottomRight.point)")
     }
     
+    func isEmpty() -> Bool {
+        return self == CSRectangle(rectangleType: .empty)
+    }
+    
 }

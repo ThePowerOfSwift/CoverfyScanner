@@ -158,10 +158,6 @@ public class CoverfyScanner: NSObject {
         case .none:
             image = self.currentImage.crop(withRectangle: self.detectedRectangle, preferredOrientation: orientation)
         }
-        
-        if image == nil {
-            image = self.currentImage.noCropWithColorContrast(preferredOrientation: orientation)
-        }
                 
         self.captureProgress = -50
         delegate?.getCapturedImageFiltered(image)
