@@ -286,16 +286,17 @@ public class CoverfyScanner: NSObject {
     // MARK: - Document Detection Methods
     
     private func performRectangleDetection(image: CIImage) -> CIImage? {
-        let previousImage = renderRed(rectangle: self.detectedRectangle, inImage: image)
+        let previousImage = renderRed(self.detectedRectangle, inImage: image)
         
         if let detector = detector {
-            guard let feature = detector.features(in: image).first as? CIRectangleFeature else {
+            guard let blackWhiteImage = image.filterImageUsingContrastFilter() else { return  previousImage }
+            guard let feature = detector.features(in: blackWhiteImage).first as? CIRectangleFeature else {
                 squareDetectionCounter += 1
                 return previousImage
             }
             
             let rectangle = CSRectangle(rectangle: feature)
-            
+                        
             detectedRectangle.topLeft.point = shouldRefreshPoint(image, rectangle, detectedRectangle.topLeft, rectangle.topLeft)
             detectedRectangle.topRight.point = shouldRefreshPoint(image, rectangle, detectedRectangle.topRight, rectangle.topRight)
             detectedRectangle.bottomLeft.point = shouldRefreshPoint(image, rectangle, detectedRectangle.bottomLeft, rectangle.bottomLeft)
@@ -303,13 +304,13 @@ public class CoverfyScanner: NSObject {
             
             squareDetectionCounter = 0
             
-            return renderRed(rectangle: rectangle, inImage: image)
+            return renderRed(rectangle, inImage: image)
         }
         
         return image
     }
     
-    private func renderRed(rectangle: CSRectangle, inImage image: CIImage) -> CIImage {
+    private func renderRed(_ rectangle: CSRectangle, inImage image: CIImage) -> CIImage {
         
         var redSquareOverlay = CIImage(color: CIColor(red: 1.0, green: 0, blue: 0, alpha: 0.5))
         redSquareOverlay = redSquareOverlay.cropping(to: image.extent)
@@ -342,6 +343,7 @@ public class CoverfyScanner: NSObject {
             self.captureProgress -= 2
             
         } else if previous.absoluteMovementFrom(point: actual) < 50 &&  previous.absoluteMovementFrom(point: actual) >= 30 {
+             squareDetectionCounter += 1
             self.captureProgress = 0
             
         } else {
